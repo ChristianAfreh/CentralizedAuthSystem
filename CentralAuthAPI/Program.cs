@@ -50,7 +50,7 @@ builder.Services.AddAuthentication(options =>
 		 ValidateAudience = true, //validates client(recipient) that is authorized to receive token
 		 ValidAudience = configuration["JWT:ValidAudience"],
 		 ValidIssuer = configuration["JWT:ValidIssuer"],
-		 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+		 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:JWTSecret"])) //validates the signature of the token
 	 };
  });
 
