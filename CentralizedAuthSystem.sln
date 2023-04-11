@@ -5,6 +5,10 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentralAuthAPI", "CentralAuthAPI\CentralAuthAPI.csproj", "{28226E0F-89C6-43B9-A0F1-1B72781EB113}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountingSystem", "AccountingSystem\AccountingSystem.csproj", "{75652931-E25F-4FF6-A7EC-7164C593B3C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRSystem", "HRSystem\HRSystem.csproj", "{49C264D2-7632-4518-9584-693290392160}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{28226E0F-89C6-43B9-A0F1-1B72781EB113}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28226E0F-89C6-43B9-A0F1-1B72781EB113}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28226E0F-89C6-43B9-A0F1-1B72781EB113}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75652931-E25F-4FF6-A7EC-7164C593B3C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75652931-E25F-4FF6-A7EC-7164C593B3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75652931-E25F-4FF6-A7EC-7164C593B3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75652931-E25F-4FF6-A7EC-7164C593B3C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49C264D2-7632-4518-9584-693290392160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49C264D2-7632-4518-9584-693290392160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49C264D2-7632-4518-9584-693290392160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49C264D2-7632-4518-9584-693290392160}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
