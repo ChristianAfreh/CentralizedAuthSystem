@@ -164,7 +164,7 @@ namespace CentralAuthAPI.Service
 
             var isClientValid = IsClientValid(clientDTO.ClientId, clientDTO.ClientSecret);
 
-            if (isClientValid)
+            if (!isClientValid)
             {
                 throw new CustomException($"Invalid client with Client ID:{clientDTO.ClientId} and Client Secret:{clientDTO.ClientSecret}");
             }

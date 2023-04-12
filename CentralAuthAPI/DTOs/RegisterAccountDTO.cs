@@ -9,7 +9,7 @@ namespace CentralAuthAPI.DTOs
 		public string SurName { get; set; }
 		public string OtherNames { get; set; }
 		public string Email { get; set; }
-		public string PhoneNumber { get; set; }
+		public string? PhoneNumber { get; set; }
 	}
 
 	public class UpdateAccountDTO
@@ -17,6 +17,6 @@ namespace CentralAuthAPI.DTOs
 		public string SurName { get; set; }
 		public string OtherNames { get; set; }
 		public string Email { get; set; }
-		public string PhoneNumber { get; set; }
+		public string? PhoneNumber { get; set; }
 	}
 }

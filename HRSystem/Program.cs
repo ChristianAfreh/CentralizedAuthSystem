@@ -1,6 +1,18 @@
+using HRSystem.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
+ConfigurationManager configuration = builder.Configuration;
+
 // Add services to the container.
+builder.Services.AddDbContext<HRSystemDBContext>(opt =>
+                    opt.UseSqlServer(configuration.GetConnectionString("HRSystemDBConnection")));
+
+builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<HRSystemDBContext>(); ;
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
