@@ -27,7 +27,14 @@ builder.Services.RegisterServices();
 
 
 // For Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<AppUser,IdentityRole>(options =>
+{
+	options.SignIn.RequireConfirmedEmail = true;
+	options.Password.RequireUppercase = true;
+	options.Password.RequireLowercase = true;
+	options.Password.RequiredLength = 8;
+	options.Password.RequireDigit = true;
+})
 	.AddEntityFrameworkStores<AppUserDBContext>()
 	.AddDefaultTokenProviders();
 

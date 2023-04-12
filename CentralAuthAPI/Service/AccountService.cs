@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
@@ -158,6 +159,9 @@ namespace CentralAuthAPI.Service
 
         public void VerifyClient(ClientDTO clientDTO)
         {
+            if (clientDTO.ClientId == null || clientDTO.ClientSecret == null)
+                throw new CustomException("Client model is null. Provide values for client model.");
+
             var isClientValid = IsClientValid(clientDTO.ClientId, clientDTO.ClientSecret);
 
             if (isClientValid)
