@@ -1,9 +1,11 @@
 ﻿using HRSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace HRSystem.Controllers
 {
+	
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -13,12 +15,14 @@ namespace HRSystem.Controllers
 			_logger = logger;
 		}
 
-		public IActionResult Index()
+        [Authorize]
+        public IActionResult Index()
 		{
 			return View();
 		}
 
-		public IActionResult Privacy()
+        [Authorize]
+        public IActionResult Privacy()
 		{
 			return View();
 		}

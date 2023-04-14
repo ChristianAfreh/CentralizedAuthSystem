@@ -29,25 +29,26 @@ namespace CentralAuthAPI.Service
 
         public async Task RegisterAccount(RegisterAccountDTO registerAccountDTO)
         {
-            //check if username is existing
-            var usernameExists = await _userManager.FindByNameAsync(registerAccountDTO.UserName);
-
-            if (usernameExists != null)
-            {
-                throw new CustomException("Username already exists.");
-            }
-
-            if (string.IsNullOrEmpty(registerAccountDTO.Email))
-            {
-                throw new CustomException("Email field cannot be empty. Kindly provide an email.");
-            }
-            else if (!IsValidEmail(registerAccountDTO.Email))
-            {
-                throw new CustomException("Email is invalid. Kindly provide a valid email.");
-            }
+           
 
             try
             {
+                //check if username is existing
+                var usernameExists = await _userManager.FindByNameAsync(registerAccountDTO.UserName);
+
+                if (usernameExists != null)
+                {
+                    throw new CustomException("Username already exists.");
+                }
+
+                if (string.IsNullOrEmpty(registerAccountDTO.Email))
+                {
+                    throw new CustomException("Email field cannot be empty. Kindly provide an email.");
+                }
+                else if (!IsValidEmail(registerAccountDTO.Email))
+                {
+                    throw new CustomException("Email is invalid. Kindly provide a valid email.");
+                }
                 //Instantiate AppUser class and get account properties for registration
                 AppUser appUser = new AppUser
                 {
@@ -70,10 +71,10 @@ namespace CentralAuthAPI.Service
                     throw new CustomException(errorMessage);
                 }
             }
-            catch
+            catch(CustomException ex)
             {
 
-                throw new CustomException("Account Registration Failed. Kindly contact System Administrator for assistance.");
+                throw new CustomException(ex.Message);
             }
 
 

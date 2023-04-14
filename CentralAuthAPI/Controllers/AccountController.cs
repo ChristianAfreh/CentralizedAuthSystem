@@ -30,7 +30,7 @@ namespace CentralAuthAPI.Controllers
 			catch (CustomException ex)
 			{
 				
-				return BadRequest(ex.Message);
+				return Content(ex.Message);
 				
 			}
 			
@@ -49,7 +49,7 @@ namespace CentralAuthAPI.Controllers
 			catch (CustomException ex)
 			{
 
-				return BadRequest(ex.Message);
+				return BadRequest(ex);
 			}
 		}
 

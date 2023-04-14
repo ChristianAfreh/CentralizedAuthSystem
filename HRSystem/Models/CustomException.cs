@@ -1,6 +1,6 @@
 ﻿namespace HRSystem.Models
 {
-    public class CustomException : Exception
+    public class CustomException : HttpRequestException
     {
         public CustomException(string message) : base(message)
         {
