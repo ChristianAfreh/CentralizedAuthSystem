@@ -77,7 +77,7 @@ namespace HRSystem.Controllers
                     return View(model);
                 }
 
-                catch (CustomException ex)
+                catch (HttpRequestException ex)
                 {
                     string msg = "";
                     msg = ex.Message;

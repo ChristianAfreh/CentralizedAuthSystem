@@ -16,9 +16,27 @@ builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignI
                     .AddEntityFrameworkStores<HRSystemDBContext>(); ;
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<SignInManager<IdentityUser>>();
+
+builder.Services.ConfigureApplicationCookie(opt =>
+{
+	opt.Cookie.HttpOnly = true;
+	opt.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+	opt.LoginPath = "/Account/Login";
+	opt.SlidingExpiration = true;
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
         options => builder.Configuration.Bind("CookieSettings", options));
+
+
+builder.Services.AddSession(opt =>
+{
+	opt.Cookie.IsEssential = true;
+	opt.Cookie.HttpOnly = true;
+	opt.IdleTimeout = TimeSpan.FromMinutes(15);
+});
 
 var app = builder.Build();
 
@@ -32,10 +50,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseCookiePolicy();
 app.UseAuthentication();
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
 	name: "default",

@@ -1,4 +1,5 @@
 ﻿using AccountingSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,12 +14,14 @@ namespace AccountingSystem.Controllers
 			_logger = logger;
 		}
 
-		public IActionResult Index()
+        [Authorize]
+        public IActionResult Index()
 		{
 			return View();
 		}
 
-		public IActionResult Privacy()
+        [Authorize]
+        public IActionResult Privacy()
 		{
 			return View();
 		}

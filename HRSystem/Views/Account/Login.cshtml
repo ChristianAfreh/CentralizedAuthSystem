@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    bool showErrorMessage = string.IsNullOrEmpty(ViewBag.Message) ? true:false;
+    var erMsg = ViewBag.Message ?? "";
 }
 
 @section Styles{
@@ -19,15 +19,10 @@
                             <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign In</p>
-                                @if (showErrorMessage)
-                                {
-                                    <p class="text-danger">
-                                        @ViewBag.Message
-                                    </p>
-                                }
-                                
-                                <form class="mx-1 mx-md-4" asp-controller="Account" asp-action="Login" method="post">
                                     
+                                <form class="mx-1 mx-md-4" asp-controller="Account" asp-action="Login" method="post">
+                                    <p id="errorDiv" class="text-danger">
+                                    </p>
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <div class="form-outline flex-fill mb-0">
                                             <span asp-validation-for="@Model.UserName" class="text-danger"></span>
@@ -69,4 +64,17 @@
 </section>
 @section Scripts{
     <script src="~/lib/font-awesome/js/"></script>
+
+    <script>
+
+        var errorMessage = '@erMsg';
+
+        $(document).ready(function(){
+            debugger
+            if (errorMessage){
+                $("#errorDiv").html(`${errorMessage}`);
+            }
+              
+        })
+    </script>
 }
