@@ -87,18 +87,22 @@ namespace AccountingSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             ViewBag.Message = TempData["Message"];
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
         {
 
             try
             {
+                ViewData["ReturnUrl"] = returnUrl;
+                returnUrl = returnUrl ?? Url.Content("~/");
+
                 if (ModelState.IsValid)
                 {
                     var loginURL = $"{_authBaseUrl}/api/account/login";
@@ -126,14 +130,13 @@ namespace AccountingSystem.Controllers
 
                         var claims = verifiedToken.Claims;
 
-                        var user = new ClaimsIdentity(claims);
+                        var user = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
 
                         ClaimsPrincipal principal = new(user);
 
-                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                        return LocalRedirect("/");
-
-
+                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                            return LocalRedirect(returnUrl);
+  
                     }
 
                 }
@@ -149,6 +152,17 @@ namespace AccountingSystem.Controllers
             }
 
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _signInManager.SignOutAsync();
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
+            await HttpContext.SignOutAsync("Cookies");
+
+            return RedirectToAction("Login");
         }
 
         public IActionResult ErrorView()
@@ -175,8 +189,6 @@ namespace AccountingSystem.Controllers
                 ValidateLifetime = false, // Because there is no expiration in the generated token
                 ValidateAudience = false, // Because there is no audiance in the generated token
                 ValidateIssuer = false,   // Because there is no issuer in the generated token
-                ValidIssuer = "Sample",
-                ValidAudience = "Sample",
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecret)) // The same key as the one that generate the token
             };
         }

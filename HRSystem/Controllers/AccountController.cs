@@ -131,7 +131,7 @@ namespace HRSystem.Controllers
 
                         var claims = verifiedToken.Claims;
 
-                        var user = new ClaimsIdentity(claims);
+                        var user = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                         ClaimsPrincipal principal = new(user);
 

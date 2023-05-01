@@ -1,8 +1,10 @@
+using AccountingSystem.Extensions;
 using AccountingSystem.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,7 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddDbContext<AccountingSystemDBContext>(opt =>
                     opt.UseSqlServer(configuration.GetConnectionString("AccountingSystemDBConnection")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
                     .AddEntityFrameworkStores<AccountingSystemDBContext>(); ;
 builder.Services.AddControllersWithViews();
 
@@ -24,11 +26,18 @@ builder.Services.ConfigureApplicationCookie(opt =>
     opt.ExpireTimeSpan = TimeSpan.FromMinutes(15);
     opt.LoginPath = "/Account/Login";
     opt.SlidingExpiration = true;
+    opt.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-        options => builder.Configuration.Bind("CookieSettings", options));
+    .AddCookie(
+        options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+            options.SlidingExpiration = true;
+            options.AccessDeniedPath = "/Account/AccessDenied";
+        });
 
 
 builder.Services.AddSession(opt =>
@@ -37,6 +46,8 @@ builder.Services.AddSession(opt =>
     opt.Cookie.HttpOnly = true;
     opt.IdleTimeout = TimeSpan.FromMinutes(15);
 });
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
@@ -51,12 +62,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCookiePolicy();
-app.UseAuthentication();
 app.UseSession();
+AppHttpContext.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());   
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",
