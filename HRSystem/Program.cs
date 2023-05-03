@@ -1,3 +1,4 @@
+using HRSystem.Extensions;
 using HRSystem.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -27,8 +28,7 @@ builder.Services.ConfigureApplicationCookie(opt =>
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-        options => builder.Configuration.Bind("CookieSettings", options));
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
 
 
 builder.Services.AddSession(opt =>
@@ -37,6 +37,8 @@ builder.Services.AddSession(opt =>
 	opt.Cookie.HttpOnly = true;
 	opt.IdleTimeout = TimeSpan.FromMinutes(15);
 });
+
+
 
 var app = builder.Build();
 
@@ -51,10 +53,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCookiePolicy();
-app.UseAuthentication();
 app.UseSession();
+AppHttpContext.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 

@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace HRSystem.Controllers
 {
-	[Authorize]
+
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
@@ -15,12 +15,13 @@ namespace HRSystem.Controllers
 			_logger = logger;
 		}
 
- 
+		[HttpGet]
         public IActionResult Index()
 		{
 			return View();
 		}
 
+		[HttpGet]
         public IActionResult Privacy()
 		{
 			return View();

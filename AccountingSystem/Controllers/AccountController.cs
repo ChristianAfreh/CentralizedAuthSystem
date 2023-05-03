@@ -91,7 +91,6 @@ namespace AccountingSystem.Controllers
         public IActionResult Login(string? returnUrl)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            ViewBag.Message = TempData["Message"];
             return View();
         }
 
@@ -166,6 +165,7 @@ namespace AccountingSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
+            HttpContext.Session.Set(SessionValueKeys.isAuthenticated, false);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await _signInManager.SignOutAsync();
             HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");

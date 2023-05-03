@@ -93,20 +93,21 @@ namespace HRSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
-            ViewBag.Message = TempData["Message"];
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
 
             try
             {
                 ViewData["ReturnUrl"] = returnUrl;
                 returnUrl = returnUrl ?? Url.Content("~/");
+
 
                 if (ModelState.IsValid)
                 {
@@ -148,7 +149,8 @@ namespace HRSystem.Controllers
                         HttpContext.Session.Set(SessionValueKeys.isAuthenticated, principal.Identity.IsAuthenticated);
 
 
-                        return LocalRedirect(returnUrl);
+                        return RedirectToAction("Index","Home");
+                         
 
                     }
 
@@ -157,7 +159,6 @@ namespace HRSystem.Controllers
             }
             catch (HttpRequestException ex)
             {
-
                 string msg = "";
                 msg = ex.Message;
                 TempData["Message"] = msg;
@@ -169,10 +170,12 @@ namespace HRSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
+            HttpContext.Session.Set(SessionValueKeys.isAuthenticated, false);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await _signInManager.SignOutAsync();
             HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
             await HttpContext.SignOutAsync("Cookies");
+            
 
             return RedirectToAction("Login");
         }
