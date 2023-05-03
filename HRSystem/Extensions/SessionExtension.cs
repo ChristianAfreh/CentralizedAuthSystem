@@ -35,5 +35,6 @@ namespace HRSystem.Extensions
         public const string loginResponse = "loginResponse";
         public const string userId = "userId";
         public const string userName = "userName";
+        public const string isAuthenticated = "isAuthenticated";  
     }
 }

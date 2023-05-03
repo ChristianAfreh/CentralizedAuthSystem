@@ -1,4 +1,5 @@
-﻿using HRSystem.Models;
+﻿using HRSystem.Extensions;
+using HRSystem.Models;
 using HRSystem.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -99,11 +100,14 @@ namespace HRSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
         {
 
             try
             {
+                ViewData["ReturnUrl"] = returnUrl;
+                returnUrl = returnUrl ?? Url.Content("~/");
+
                 if (ModelState.IsValid)
                 {
                     var loginURL = $"{_authBaseUrl}/api/account/login";
@@ -127,6 +131,11 @@ namespace HRSystem.Controllers
 
                         var loginResponse = JsonConvert.DeserializeObject<LoginResponseViewModel>(response.Content);
 
+                        HttpContext.Session.Set(SessionValueKeys.loginResponse, loginResponse);
+                        HttpContext.Session.Set(SessionValueKeys.userId, loginResponse.UserId);
+                        HttpContext.Session.Set(SessionValueKeys.userName, loginResponse.UserName);
+
+
                         var verifiedToken = VefifyToken(loginResponse.AccessToken);
 
                         var claims = verifiedToken.Claims;
@@ -136,8 +145,10 @@ namespace HRSystem.Controllers
                         ClaimsPrincipal principal = new(user);
 
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                        return LocalRedirect("/");
+                        HttpContext.Session.Set(SessionValueKeys.isAuthenticated, principal.Identity.IsAuthenticated);
 
+
+                        return LocalRedirect(returnUrl);
 
                     }
 
@@ -152,11 +163,21 @@ namespace HRSystem.Controllers
                 TempData["Message"] = msg;
                 return View(model);
             }
-          
 
         }
 
-            public IActionResult ErrorView()
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _signInManager.SignOutAsync();
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
+            await HttpContext.SignOutAsync("Cookies");
+
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult ErrorView()
             {
                 return View();
             }
@@ -180,8 +201,6 @@ namespace HRSystem.Controllers
                     ValidateLifetime = false, // Because there is no expiration in the generated token
                     ValidateAudience = false, // Because there is no audiance in the generated token
                     ValidateIssuer = false,   // Because there is no issuer in the generated token
-                    ValidIssuer = "Sample",
-                    ValidAudience = "Sample",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecret)) // The same key as the one that generate the token
                 };
             }

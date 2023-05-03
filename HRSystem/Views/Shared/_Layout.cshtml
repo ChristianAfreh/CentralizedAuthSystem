@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using HRSystem.Extensions;
+
+@{
+    bool isAuthenticated = Context.Session.Get<bool>(SessionValueKeys.isAuthenticated);
+    string username = Context.Session.Get<string>(SessionValueKeys.userName);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,31 +20,52 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HRSystem</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HR System</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-start" >
-                        <ul class="navbar-nav flex-grow-1" style="justify-content:right;">
+                    @if (isAuthenticated)
+                    {
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
                         </ul>
-                        
-                    </div>
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-start">
+
+                            <div class="navbar-nav flex-grow-1" style="justify-content:right;">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Hello! @username
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><a class="dropdown-item" asp-action="Logout" asp-controller="Account">Logout</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-start">
+                            <ul class="navbar-nav flex-grow-1" style="justify-content:right;">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    }
+
                 </div>
 
             </div>

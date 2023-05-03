@@ -9,6 +9,7 @@ using System.Text;
 using RestSharp;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using AccountingSystem.Extensions;
 
 namespace AccountingSystem.Controllers
 {
@@ -126,6 +127,11 @@ namespace AccountingSystem.Controllers
 
                         var loginResponse = JsonConvert.DeserializeObject<LoginResponseViewModel>(response.Content);
 
+                        HttpContext.Session.Set(SessionValueKeys.loginResponse, loginResponse);
+                        HttpContext.Session.Set(SessionValueKeys.userId, loginResponse.UserId);
+                        HttpContext.Session.Set(SessionValueKeys.userName, loginResponse.UserName);
+                        
+
                         var verifiedToken = VefifyToken(loginResponse.AccessToken);
 
                         var claims = verifiedToken.Claims;
@@ -135,7 +141,10 @@ namespace AccountingSystem.Controllers
                         ClaimsPrincipal principal = new(user);
 
                             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                            return LocalRedirect(returnUrl);
+                            HttpContext.Session.Set(SessionValueKeys.isAuthenticated, principal.Identity.IsAuthenticated);
+
+
+                        return LocalRedirect(returnUrl);
   
                     }
 

@@ -1,12 +1,19 @@
-﻿@{
+﻿@using AccountingSystem.Extensions;
+@{
     ViewData["Title"] = "Home Page";
+
+    var username = Context.Session.Get<string>(SessionValueKeys.userName);
+
 }
 
 <div class="container h-100">
     <div class="text-center border-dark" style="border: 1px solid grey;border-radius:20px">
         <h3 class="display-6">Welcome To Axis Accounting System</h3>
-
-        <img src="~/img/accountinglogo.png" width="600px" height="500px" />
+        @if (!string.IsNullOrEmpty(username))
+        {
+            <p>Hello, @username</p>
+        }
+        <img src="~/img/AccountingLogo.png" width="600px" height="500px" style="margin-top:5px" />
 
     </div>
 </div>

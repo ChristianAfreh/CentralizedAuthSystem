@@ -1,8 +1,18 @@
-﻿@{
+﻿@using HRSystem.Extensions;
+@{
     ViewData["Title"] = "Home Page";
+
+    string username = Context.Session.Get<string>(SessionValueKeys.userName);
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container h-100">
+    <div class="text-center border-dark" style="border: 1px solid grey;border-radius:20px">
+        <h3 class="display-6">Welcome To Axis HR Management System</h3>
+        @if (!string.IsNullOrEmpty(username))
+        {
+            <p>Hello, @username</p>
+        }
+        <img src="~/img/hrsys.png" width="600px" height="500px" style="margin-top:5px" />
+
+    </div>
 </div>
